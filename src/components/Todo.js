@@ -2,23 +2,32 @@ import React, { useState } from 'react'
 import TodoForm from './TodoForm'
 import { RiCloseCircleLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
-function  Todo({todos, completeTodo}) {
+function  Todo({todos, completeTodo, removeTodo,updatedTodo}) {
     console.log('todos',todos);
     const [edit, setEdit] = useState({
         id : null,
         value : ''
     });
 
-    const removeTodo = (id) => {
+    const submitUpdate = value => {
+        updatedTodo(edit.id,value)
+        setEdit({
+            id: null,
+            value : ''
+        })
+    }
+
+    if(edit.id){
+        return <TodoForm edit={edit} onSubmit={submitUpdate}/>
+    }
+
+    /* const removeTodo = (id) => {
         console.log('todos bfr del',todos);
         const newTodos = todos.filter((el) => el.id !== id);
         todos = newTodos;
         console.log('todos after del',todos);
-    }
-    
-    const editTodo = (id) => {
-        console.log('todo to edit ',id);
-    }
+    } */
+
     return todos.map((todo,index) => (
         // console.log('todo is',todo);
         // console.log('index is',index);
@@ -29,8 +38,12 @@ function  Todo({todos, completeTodo}) {
             <div className='icons'>
                 <RiCloseCircleLine
                     onClick={() => removeTodo(todo.id)}
+                    className="delete-icon"
                 />
-                <TiEdit onClick={() => editTodo(todo.id)}/>
+                <TiEdit 
+                    onClick={() => setEdit({id:todo.id, value: todo.text})}
+                    className="edit-icon"
+                />
             </div>
         </div>
     ))
